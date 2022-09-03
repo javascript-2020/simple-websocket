@@ -1,6 +1,3 @@
-
-
-
         var crypto    = require('crypto');
 
         var websocket;
@@ -53,9 +50,9 @@
         function rec(data){
 
               buffer    = Buffer.concat([buffer,data]);
-              
+                                                      
               if(buffer.length<2)return;
-              
+                                                      
               var byte0     = buffer.readUInt8(0);
               var opcode    = byte0 & 15;
 
@@ -71,14 +68,14 @@
         }//rec
         
         rec.close=function(){
-        
+
               send.close();
               websocket.destroy();
               
         }//close
         
         rec.text=function(){
-        
+
               var byte1     = buffer.readUInt8(1);
               
               var ext       = 0;
@@ -111,6 +108,8 @@
                     payload.writeUInt8(byte,i);
                     
               }//for
+
+              buffer        = buffer.slice(end);
 
               
               //msgrec(payload);
@@ -177,6 +176,5 @@
               send(buffer);
               
         }//send.close
-        
         
         
