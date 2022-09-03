@@ -24,6 +24,7 @@ https://www.rfc-editor.org/rfc/rfc6455#section-5
               res.setHeader('content-type','text/html');
               res.end(`
               <h3>example : simple-websocket.js</h3>
+              <input id=wsclose value=close type=button />
               <pre id=output></pre>
               <script>
               
@@ -33,6 +34,13 @@ https://www.rfc-editor.org/rfc/rfc6455#section-5
                     ws.onopen       = ()=>log('onopen');
                     ws.onclose      = ()=>log('onclose');
                     ws.onmessage    = onmessage;
+                    
+                    wsclose.onclick   = e=>{
+                    
+                          log('close');
+                          ws.close();
+                          
+                    };
                     
                     function onmessage(e){
                     
@@ -99,9 +107,9 @@ https://www.rfc-editor.org/rfc/rfc6455#section-5
         function rec(data){
 
               buffer    = Buffer.concat([buffer,data]);
-              
+                                                      
               if(buffer.length<2)return;
-              
+                                                      
               var byte0     = buffer.readUInt8(0);
               var opcode    = byte0 & 15;
 
@@ -117,14 +125,14 @@ https://www.rfc-editor.org/rfc/rfc6455#section-5
         }//rec
         
         rec.close=function(){
-        
+
               send.close();
               websocket.destroy();
               
         }//close
         
         rec.text=function(){
-        
+
               var byte1     = buffer.readUInt8(1);
               
               var ext       = 0;
@@ -157,6 +165,8 @@ https://www.rfc-editor.org/rfc/rfc6455#section-5
                     payload.writeUInt8(byte,i);
                     
               }//for
+
+              buffer        = buffer.slice(end);
 
               
               //msgrec(payload);
@@ -223,9 +233,5 @@ https://www.rfc-editor.org/rfc/rfc6455#section-5
               send(buffer);
               
         }//send.close
-        
-        
-        
-        
         
         
